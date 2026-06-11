@@ -6,3 +6,4 @@
 
 - [Android 开发转 Agent 工程学习路线](docs/agent-learning-roadmap.md)
 - [Python + FastAPI 阅读理解指南（写给 Android / Java 开发者）](docs/python-fastapi-essentials.md)
+- [LLM API 与 Tool Calling 阅读理解指南（写给 Android / Java 开发者）](docs/llm-api-and-tool-calling.md)

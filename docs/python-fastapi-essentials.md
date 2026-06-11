@@ -851,6 +851,29 @@ def get_task(task_id: int, store=Depends(get_store)): # task_id 名字对上 {ta
 
 ---
 
+## 参考链接 / 延伸阅读
+
+> 下面都是官方文档，最权威但也随版本更新；链接偶尔会调整，失效时按标题搜索即可。**FastAPI 官方文档右上角可切换中文**，对你很友好。
+
+**Python 语言**
+- 官方教程：https://docs.python.org/3/tutorial/
+- 类型标注 typing：https://docs.python.org/3/library/typing.html
+- asyncio（异步底层）：https://docs.python.org/3/library/asyncio.html
+
+**FastAPI**
+- 官方文档（含中文，强烈推荐）：https://fastapi.tiangolo.com/
+- 教程（从入门到部署，边读边动手）：https://fastapi.tiangolo.com/tutorial/
+- 并发与 async/await（讲得很通俗，专治“何时用 async”）：https://fastapi.tiangolo.com/async/
+- 依赖注入 Depends：https://fastapi.tiangolo.com/tutorial/dependencies/
+
+**Pydantic**
+- 官方文档：https://docs.pydantic.dev/
+
+**虚拟环境 / 依赖管理**
+- uv：https://docs.astral.sh/uv/
+
+---
+
 ## 下一步建议
 
 读完这份文档后，最有效的巩固方式是 **对照路线图第 1 周的 Task API 项目，让 AI 生成一份完整代码，然后用本文 Part 4 的方式逐行读一遍**——遇到读不懂的语法，回到对应章节查。能读懂、能让 AI 按你的意思改，就达到了"看懂 AI 代码"的目标。
