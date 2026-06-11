@@ -5,3 +5,4 @@
 ## 文档
 
 - [Android 开发转 Agent 工程学习路线](docs/agent-learning-roadmap.md)
+- [Python + FastAPI 阅读理解指南（写给 Android / Java 开发者）](docs/python-fastapi-essentials.md)
