@@ -1,0 +1,4 @@
+<resources>
+    <!-- 用平台自带主题，免依赖 Material Components XML；Compose 自己管 UI 主题 -->
+    <style name="Theme.PocketAgent" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

@@ -1,0 +1,16 @@
+# 模型与 llama.cpp 源码不入库
+*.gguf
+*.bin
+/llama.cpp/
+
+# Android / Gradle
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx/
+local.properties
