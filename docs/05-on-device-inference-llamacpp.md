@@ -2,11 +2,11 @@
 
 ## 0. 这份文档怎么用
 
-这是 [端侧 AI 学习轨道](on-device-ai-track.md) 的第一篇**代码级展开篇**，对应轨道的 **Part 5.1–5.3** 和里程碑 **M0–M2**。
+这是 [端侧 AI 学习轨道](02-on-device-ai-track.md) 的第一篇**代码级展开篇**，对应轨道的 **Part 5.1–5.3** 和里程碑 **M0–M2**。
 
 和已有两篇的分工，别搞混：
 
-- [C++ 补齐计划](cpp-for-on-device-ai.md)：讲**语言和 JNI 桥**（指针、内存、`Java_xxx` 函数怎么写）。
+- [C++ 补齐计划](03-cpp-for-on-device-ai.md)：讲**语言和 JNI 桥**（指针、内存、`Java_xxx` 函数怎么写）。
 - **本篇**：讲**推理本身**——模型怎么选、GGUF 是什么、量化档怎么挑和验证、运行时的关键参数、CPU/GPU/NPU 后端怎么切怎么比、怎么测出能写进简历的数字。
 
 取舍：
@@ -33,7 +33,7 @@
 | **A. 改官方示例**（推荐）| clone llama.cpp，跑它自带的 `examples/llama.android`（Kotlin + JNI + CMake，开箱即用）| **第一次**，最快出结果 |
 | B. 从零集成 | 自己写 CMake 链 llama.cpp、自己写 JNI | 跑通 A 之后，理解了再做 |
 
-> 先走 A：把官方示例在真机上跑起来，**1～2 个晚上**能成。跑通后再对着它的代码逐行读（配合 [C++ 篇](cpp-for-on-device-ai.md) Part 5 的 JNI 视角），比任何教程都快。
+> 先走 A：把官方示例在真机上跑起来，**1～2 个晚上**能成。跑通后再对着它的代码逐行读（配合 [C++ 篇](03-cpp-for-on-device-ai.md) Part 5 的 JNI 视角），比任何教程都快。
 
 ### 1.2 拿一个模型
 
@@ -71,7 +71,7 @@
 
 ### 2.3 选多大的：回扣内存预算
 
-端侧选型第一约束是**内存**。回扣 [轨道 Part 3.3](on-device-ai-track.md) 的估算（权重内存 ≈ 参数量 × 每权重字节）：
+端侧选型第一约束是**内存**。回扣 [轨道 Part 3.3](02-on-device-ai-track.md) 的估算（权重内存 ≈ 参数量 × 每权重字节）：
 
 | 规模 | Q4（×0.5）权重 | 适合 |
 |---|---|---|
@@ -86,7 +86,7 @@
 
 ## Part 3 · 量化：怎么选档、怎么验证质量 ★★★
 
-量化是端侧工程师最该有判断力的地方。回扣 [轨道 Part 3.3](on-device-ai-track.md)：量化是**用精度换体积和速度**。这一节讲怎么**读懂档位、选对档、验证质量**。
+量化是端侧工程师最该有判断力的地方。回扣 [轨道 Part 3.3](02-on-device-ai-track.md)：量化是**用精度换体积和速度**。这一节讲怎么**读懂档位、选对档、验证质量**。
 
 ### 3.1 量化档命名解码
 
@@ -122,7 +122,7 @@ Q4_K_M
 
 1. **固定输入肉眼对比**（最快）：拿 5～10 条代表性输入，同一模型跑 `Q8` 和 `Q4`，并排看输出有没有变差。
 2. **perplexity（困惑度）**：llama.cpp 自带 `llama-perplexity` 工具，在一段文本上算困惑度。**数值越低越好**；比较 `Q4` 比 `Q8` 高多少，就是量化的"质量代价"。
-3. **任务正确率**（最贴业务）：用一个评测集算成功率——这直接接上主线 [Eval 篇](agent-eval-and-metrics.md) 和 [收官项目](edge-cloud-agent-capstone.md) M5。
+3. **任务正确率**（最贴业务）：用一个评测集算成功率——这直接接上主线 [Eval 篇](12-agent-eval-and-metrics.md) 和 [收官项目](04-edge-cloud-agent-capstone.md) M5。
 
 > **这就是你简历里的硬货**："我对比了 Q4_K_M 和 Q8_0：体积从 X 降到 Y、decode 速度从 A 升到 B、perplexity 只升了 C%、任务成功率几乎不变——所以端侧选 Q4_K_M。" 这种带数据的取舍判断，纯调 API 的人讲不出来。
 
@@ -139,7 +139,7 @@ Q4_K_M
 
 ## Part 4 · 运行时怎么用：8 步骨架的参数展开 ★★
 
-回扣 [C++ 篇 Part 4.1](cpp-for-on-device-ai.md) 的 8 步骨架（加载→上下文→tokenize→decode 循环→采样→detokenize→释放）。这里展开**实战中真正要调的参数**。
+回扣 [C++ 篇 Part 4.1](03-cpp-for-on-device-ai.md) 的 8 步骨架（加载→上下文→tokenize→decode 循环→采样→detokenize→释放）。这里展开**实战中真正要调的参数**。
 
 ### 4.1 加载与上下文的关键参数
 
@@ -156,7 +156,7 @@ cparams.n_gpu_layers = 0;      // 把多少层放 GPU 跑（0=纯 CPU，见 Part
 
 | 参数 | 作用 | 对照 |
 |---|---|---|
-| `temperature` | 越高越随机/有创意，越低越确定 | 同主线 [LLM API 篇](llm-api-and-tool-calling.md) |
+| `temperature` | 越高越随机/有创意，越低越确定 | 同主线 [LLM API 篇](10-llm-api-and-tool-calling.md) |
 | `top_k` / `top_p` / `min_p` | 只在概率最高的若干候选里挑，过滤长尾乱词 | 同上 |
 | `repeat_penalty` | 抑制复读 | 小模型尤其需要 |
 | `n_predict` | 最多生成多少 token | ≈ `max_tokens` |
@@ -171,11 +171,11 @@ cparams.n_gpu_layers = 0;      // 把多少层放 GPU 跑（0=纯 CPU，见 Part
 KV cache 内存 ≈ 2 × 层数 × n_ctx × 隐藏维度 × 每元素字节
 ```
 
-> 实战意义：`n_ctx` 不是越大越好。设 8K 上下文可能比模型权重还吃内存，直接 OOM。**端侧按需设小**（如 2K），检索/对话内容精简（回扣 [轨道 Part 5.6](on-device-ai-track.md) 端侧 RAG）。
+> 实战意义：`n_ctx` 不是越大越好。设 8K 上下文可能比模型权重还吃内存，直接 OOM。**端侧按需设小**（如 2K），检索/对话内容精简（回扣 [轨道 Part 5.6](02-on-device-ai-track.md) 端侧 RAG）。
 
 ### 4.4 流式输出
 
-decode 循环里每出一个 token 就 `token_to_piece` 转成文字片段，立刻回传 UI——这就是打字机效果。怎么从 native 把每个 token 推回 Kotlin，见 [C++ 篇 Part 5.3](cpp-for-on-device-ai.md)。
+decode 循环里每出一个 token 就 `token_to_piece` 转成文字片段，立刻回传 UI——这就是打字机效果。怎么从 native 把每个 token 推回 Kotlin，见 [C++ 篇 Part 5.3](03-cpp-for-on-device-ai.md)。
 
 ---
 
@@ -204,7 +204,7 @@ decode 循环里每出一个 token 就 `token_to_piece` 转成文字片段，立
 所以一个务实的学习顺序是：
 
 1. 先用 **llama.cpp + CPU** 把端侧推理、量化、Agent 全链路跑通（最低摩擦）。
-2. 想做 **NPU 对比**（JD 里 QNN/NeuroPilot 那条，回扣 [轨道 Part 5.4](on-device-ai-track.md)），再换 MNN / QNN / ExecuTorch 专门做一版。
+2. 想做 **NPU 对比**（JD 里 QNN/NeuroPilot 那条，回扣 [轨道 Part 5.4](02-on-device-ai-track.md)），再换 MNN / QNN / ExecuTorch 专门做一版。
 
 ### 5.4 该选哪个后端
 
@@ -231,16 +231,16 @@ decode 循环里每出一个 token 就 `token_to_piece` 转成文字片段，立
 
 两个一定要注意的坑：
 
-- **冷启动 vs 持续**：第一次和连续跑几分钟后速度不一样——手机**发热降频**（回扣 [轨道 Part 3.4](on-device-ai-track.md)）。两个都要测、都要报。
+- **冷启动 vs 持续**：第一次和连续跑几分钟后速度不一样——手机**发热降频**（回扣 [轨道 Part 3.4](02-on-device-ai-track.md)）。两个都要测、都要报。
 - **真机为准**：模拟器数字没有任何参考意义。
 
-> 产出物建议：一张表，横向是配置（量化档 × 后端），纵向是上面四个指标。这张表就是 [收官项目](edge-cloud-agent-capstone.md) M5 的雏形，也是面试白板上你能画出来的东西。
+> 产出物建议：一张表，横向是配置（量化档 × 后端），纵向是上面四个指标。这张表就是 [收官项目](04-edge-cloud-agent-capstone.md) M5 的雏形，也是面试白板上你能画出来的东西。
 
 ---
 
 ## Part 7 · 接进项目
 
-跑通和测完，把它收进一个 Kotlin 友好的接口（隐藏 JNI 细节），就能接进 [PocketAgent 收官项目](edge-cloud-agent-capstone.md) 的 M0–M2，或直接试着推进你现职 App 的一个小功能（[轨道 Part 7](on-device-ai-track.md) "把现职变成作品集"）。
+跑通和测完，把它收进一个 Kotlin 友好的接口（隐藏 JNI 细节），就能接进 [PocketAgent 收官项目](04-edge-cloud-agent-capstone.md) 的 M0–M2，或直接试着推进你现职 App 的一个小功能（[轨道 Part 7](02-on-device-ai-track.md) "把现职变成作品集"）。
 
 ```kotlin
 // 目标：让上层完全感觉不到 native / llama.cpp 的存在
@@ -258,7 +258,7 @@ interface OnDeviceLlm {
 | 现象 | 多半是 |
 |---|---|
 | 加载就崩 / OOM | 模型太大或 `n_ctx` 太大（Part 2.3 / 4.3）|
-| `UnsatisfiedLinkError` | `.so` 没打进、ABI 不符、JNI 函数名拼错（[C++ 篇 Part 7](cpp-for-on-device-ai.md)）|
+| `UnsatisfiedLinkError` | `.so` 没打进、ABI 不符、JNI 函数名拼错（[C++ 篇 Part 7](03-cpp-for-on-device-ai.md)）|
 | 输出乱码 / 不停 / 答非所问 | **chat 模板没套对**——每个模型有自己的对话格式，要用对应模板包裹 prompt |
 | 中文 token 异常 | tokenizer 问题，确认用的是该模型自带的 |
 | 很慢 | 没开多线程、跑了过大的模型、或 GPU offload 反而拖累——回 Part 5 实测 |
@@ -283,9 +283,9 @@ interface OnDeviceLlm {
 - 高通 AI Hub：https://aihub.qualcomm.com/
 
 **回到轨道**
-- [端侧 AI 学习轨道](on-device-ai-track.md)（全景）
-- [C++ 补齐计划](cpp-for-on-device-ai.md)（JNI / 语言）
-- [PocketAgent 收官蓝图](edge-cloud-agent-capstone.md)（把它用起来）
+- [端侧 AI 学习轨道](02-on-device-ai-track.md)（全景）
+- [C++ 补齐计划](03-cpp-for-on-device-ai.md)（JNI / 语言）
+- [PocketAgent 收官蓝图](04-edge-cloud-agent-capstone.md)（把它用起来）
 
 ---
 

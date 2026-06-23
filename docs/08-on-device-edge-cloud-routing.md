@@ -2,9 +2,9 @@
 
 ## 0. 这份文档怎么用
 
-这是 [端侧 AI 学习轨道](on-device-ai-track.md) **Part 5.7 的展开篇**，也是端侧展开篇系列的**收尾篇（第 4 篇）**。
+这是 [端侧 AI 学习轨道](02-on-device-ai-track.md) **Part 5.7 的展开篇**，也是端侧展开篇系列的**收尾篇（第 4 篇）**。
 
-它把前面三篇——[端侧推理](on-device-inference-llamacpp.md)、[profiling](on-device-profiling.md)、[端侧 Agent/RAG](on-device-agent-rag.md)——和你主线学的**云端 Agent**，缝成**一个完整的协同系统**。
+它把前面三篇——[端侧推理](05-on-device-inference-llamacpp.md)、[profiling](06-on-device-profiling.md)、[端侧 Agent/RAG](07-on-device-agent-rag.md)——和你主线学的**云端 Agent**，缝成**一个完整的协同系统**。
 
 **为什么这篇重要**：端云路由是端侧 Agent 岗的**头号设计题**。面试几乎必问"你怎么决定一个请求走端还是走云"，JD 里"端云协同"那条考的就是它。它不靠写多少代码，靠**判断力和系统设计**——而你做客户端、天天处理"离线/弱网/降级"，这恰恰是你的长板。
 
@@ -20,7 +20,7 @@
 
 ## Part 1 · 为什么要端云协同（不是非此即彼）★★
 
-回扣 [轨道 Part 3.2](on-device-ai-track.md)：端和云各有不可替代的长处。
+回扣 [轨道 Part 3.2](02-on-device-ai-track.md)：端和云各有不可替代的长处。
 
 | | 端侧 | 云端 |
 |---|---|---|
@@ -86,7 +86,7 @@ fun decideRoute(req: Request, net: NetworkState): RouteDecision {
 }
 ```
 
-> 关键：**每个决策都带 `reason`**。这个 reason 要落进 trace（[收官项目 Part 4](edge-cloud-agent-capstone.md) 的 `route` 字段），既方便调试，也是面试时你能逐条解释"为什么这么判"的依据。**硬约束（隐私/离线）必须最先判、一票否决**。
+> 关键：**每个决策都带 `reason`**。这个 reason 要落进 trace（[收官项目 Part 4](04-edge-cloud-agent-capstone.md) 的 `route` 字段），既方便调试，也是面试时你能逐条解释"为什么这么判"的依据。**硬约束（隐私/离线）必须最先判、一票否决**。
 
 ---
 
@@ -146,14 +146,14 @@ fun decideRoute(req: Request, net: NetworkState): RouteDecision {
 
 ## Part 5 · 把路由也测了：协同系统的评测 ★
 
-回扣 [Eval 篇](agent-eval-and-metrics.md)，协同系统多测这些：
+回扣 [Eval 篇](12-agent-eval-and-metrics.md)，协同系统多测这些：
 
 - **本地命中率**：多少比例的请求留在了端上（越高越省云费、越隐私，但要不牺牲质量）。
 - **端 / 云各自成功率** + **端到端延迟**（含路由 + 可能的降级重试）。
 - **降级触发率**：多少请求发生了回退/升级——太高说明路由判据没调好。
 - **综合成本 / 功耗**：协同方案 vs 纯云 vs 纯端，省了多少钱/电、质量差多少。
 
-> 这正是 [PocketAgent M5](edge-cloud-agent-capstone.md) 的对比实验：**纯端 vs 纯云 vs 协同**三条线并排，用数据证明"协同在你这个场景到底值不值、最优配置是什么"。
+> 这正是 [PocketAgent M5](04-edge-cloud-agent-capstone.md) 的对比实验：**纯端 vs 纯云 vs 协同**三条线并排，用数据证明"协同在你这个场景到底值不值、最优配置是什么"。
 
 ---
 
@@ -188,11 +188,11 @@ fun decideRoute(req: Request, net: NetworkState): RouteDecision {
 收官项目   PocketAgent（端云协同 Android Agent，M0–M5）
 ```
 
-**下一步就是动手**——别再加文档了，去做 [PocketAgent](edge-cloud-agent-capstone.md) 的 M0→M5：
+**下一步就是动手**——别再加文档了，去做 [PocketAgent](04-edge-cloud-agent-capstone.md) 的 M0→M5：
 
 1. M0 端侧出 token → 2. M1 端侧 Agent（约束解码工具调用）→ 3. M2 设备指标 trace → 4. M3 端云路由（本篇）→ 5. M4 本地 RAG → 6. M5 多配置对比报告。
 
-**回扣最初的 [JD 画像](on-device-ai-track.md)**：走完这套，你对得上的是——
+**回扣最初的 [JD 画像](02-on-device-ai-track.md)**：走完这套，你对得上的是——
 
 - **客户端入口型**（小红书那类）：你有客户端底子 + 端侧落地经验，正中下怀。
 - **端侧 Agent 型**（面壁那类）：端侧部署 + 工具调用/编排 + 端云协同，全覆盖。
@@ -211,16 +211,16 @@ fun decideRoute(req: Request, net: NetworkState): RouteDecision {
 - Android AICore / Gemini Nano（端侧）+ 云端 Gemini 的分工：https://developer.android.com/ai
 
 **回到轨道 / 全系列**
-- [端侧 AI 学习轨道](on-device-ai-track.md)（总纲 / JD 画像）
-- [C++ 补齐计划](cpp-for-on-device-ai.md)
-- 展开篇：[① 推理实战](on-device-inference-llamacpp.md) · [② profiling](on-device-profiling.md) · [③ Agent/RAG](on-device-agent-rag.md) · ④ 本篇
-- [PocketAgent 收官蓝图](edge-cloud-agent-capstone.md)（动手做这个）
-- 主线：[LLM API 与 Tool Calling](llm-api-and-tool-calling.md)（云半部基础）
+- [端侧 AI 学习轨道](02-on-device-ai-track.md)（总纲 / JD 画像）
+- [C++ 补齐计划](03-cpp-for-on-device-ai.md)
+- 展开篇：[① 推理实战](05-on-device-inference-llamacpp.md) · [② profiling](06-on-device-profiling.md) · [③ Agent/RAG](07-on-device-agent-rag.md) · ④ 本篇
+- [PocketAgent 收官蓝图](04-edge-cloud-agent-capstone.md)（动手做这个）
+- 主线：[LLM API 与 Tool Calling](10-llm-api-and-tool-calling.md)（云半部基础）
 
 ---
 
 ## 下一步建议
 
-做 [PocketAgent](edge-cloud-agent-capstone.md) 的 **M3**：起一个精简云端 Agent 服务（复用主线 AgentOps），在 App 里实现本篇的 `Router`（规则判据 + 双向降级 + reason 落 trace），然后**拔网测降级**——断网时云端请求要优雅回退到端侧兜底。把 Part 5 的"纯端 vs 纯云 vs 协同"对比补上，端侧轨道的完整故事就闭环了。
+做 [PocketAgent](04-edge-cloud-agent-capstone.md) 的 **M3**：起一个精简云端 Agent 服务（复用主线 AgentOps），在 App 里实现本篇的 `Router`（规则判据 + 双向降级 + reason 落 trace），然后**拔网测降级**——断网时云端请求要优雅回退到端侧兜底。把 Part 5 的"纯端 vs 纯云 vs 协同"对比补上，端侧轨道的完整故事就闭环了。
 
 > 展开篇系列到此完结。你手上现在是一套**从认知 → 技能 → 实战 → 收官项目**的完整端侧路线。接下来要么开工做 PocketAgent，要么我帮你把这些串成一张"边做现职、按周执行"的统一计划，或做简历/面试包装——你定。

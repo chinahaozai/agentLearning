@@ -2,9 +2,9 @@
 
 ## 0. 这份文档怎么用
 
-这是 [端侧 AI 学习轨道](on-device-ai-track.md) **Part 5.6 的展开篇**，端侧展开篇系列第 3 篇。
+这是 [端侧 AI 学习轨道](02-on-device-ai-track.md) **Part 5.6 的展开篇**，端侧展开篇系列第 3 篇。
 
-**前置**：假设你已经会**云端 agent loop**（主线 [LLM API 与 Tool Calling](llm-api-and-tool-calling.md)），也能在端侧**把模型跑起来**（[端侧推理实战](on-device-inference-llamacpp.md) + [C++ 篇](cpp-for-on-device-ai.md)）。这篇要解决的是把"能跑的端侧模型"变成"能干活的端侧 Agent"。
+**前置**：假设你已经会**云端 agent loop**（主线 [LLM API 与 Tool Calling](10-llm-api-and-tool-calling.md)），也能在端侧**把模型跑起来**（[端侧推理实战](05-on-device-inference-llamacpp.md) + [C++ 篇](03-cpp-for-on-device-ai.md)）。这篇要解决的是把"能跑的端侧模型"变成"能干活的端侧 Agent"。
 
 **核心问题**：端侧 Agent 的循环和云端**完全同构**（模型提议调用→你执行→回传→再循环，[第2篇] Part 4 那套）。但端侧多出两个云端没有的硬坑：
 
@@ -166,20 +166,20 @@ suspend fun runAgent(input: String): String {
 }
 ```
 
-这正是 [PocketAgent 收官项目](edge-cloud-agent-capstone.md) 的 **M1（端侧 Agent + 工具）** 和 **M4（本地 RAG）**。
+这正是 [PocketAgent 收官项目](04-edge-cloud-agent-capstone.md) 的 **M1（端侧 Agent + 工具）** 和 **M4（本地 RAG）**。
 
 ---
 
 ## Part 5 · 评测端侧 Agent（比云端多一层）★
 
-回扣主线 [Eval 篇](agent-eval-and-metrics.md)，端侧要多测几个端侧专属维度：
+回扣主线 [Eval 篇](12-agent-eval-and-metrics.md)，端侧要多测几个端侧专属维度：
 
 - **工具调用准确率 / 任务成功率**（同云端）。
 - **约束解码 开 vs 关 的对比**——直接证明这招的价值（成功率提升多少、JSON 解析失败率降多少）。
 - **不同模型 / 量化档的工具调用可靠性**——比如 Qwen2.5-1.5B 比 0.5B 稳多少、Q4 比 Q3 稳多少（接 [推理实战 Part 3.3] 的质量验证）。
 - **RAG 命中率**——检索回来的块到底相不相关。
 
-> 这些对比表是 [PocketAgent M5](edge-cloud-agent-capstone.md) 的料，也是面试里"你怎么保证小模型在端上靠谱"的实证回答。
+> 这些对比表是 [PocketAgent M5](04-edge-cloud-agent-capstone.md) 的料，也是面试里"你怎么保证小模型在端上靠谱"的实证回答。
 
 ---
 
@@ -212,15 +212,15 @@ suspend fun runAgent(input: String): String {
 - BGE embedding 模型（含中文）：https://huggingface.co/BAAI
 
 **回到轨道 / 相邻篇**
-- [端侧 AI 学习轨道](on-device-ai-track.md)（Part 5.6 全景）
-- [LLM API 与 Tool Calling](llm-api-and-tool-calling.md)（agent loop 基础）
-- [端侧推理实战](on-device-inference-llamacpp.md) / [C++ 补齐计划](cpp-for-on-device-ai.md)
-- [PocketAgent 收官蓝图](edge-cloud-agent-capstone.md)（M1 / M4 / M5）
+- [端侧 AI 学习轨道](02-on-device-ai-track.md)（Part 5.6 全景）
+- [LLM API 与 Tool Calling](10-llm-api-and-tool-calling.md)（agent loop 基础）
+- [端侧推理实战](05-on-device-inference-llamacpp.md) / [C++ 补齐计划](03-cpp-for-on-device-ai.md)
+- [PocketAgent 收官蓝图](04-edge-cloud-agent-capstone.md)（M1 / M4 / M5）
 
 ---
 
 ## 下一步建议
 
-动手做 [PocketAgent](edge-cloud-agent-capstone.md) 的 M1 + M4：给你端侧跑通的模型加**约束解码的工具调用** + 一个 `search_notes` 本地 RAG（先用"暴力余弦"，量大了再上 sqlite-vec）。做一次 Part 5 的"约束解码 开/关"对比，你会直观看到这招把小模型的可靠性拉起来多少。
+动手做 [PocketAgent](04-edge-cloud-agent-capstone.md) 的 M1 + M4：给你端侧跑通的模型加**约束解码的工具调用** + 一个 `search_notes` 本地 RAG（先用"暴力余弦"，量大了再上 sqlite-vec）。做一次 Part 5 的"约束解码 开/关"对比，你会直观看到这招把小模型的可靠性拉起来多少。
 
 > 这一篇让端侧模型"能干活、能查本地知识"。下一篇 **端云路由设计**（轨道 Part 5.7）会讲最后一块：怎么判断一个请求该留在端上还是甩给云、怎么做降级和一致性——把端和云缝成一个完整的协同 Agent。

@@ -1,8 +1,23 @@
 # PocketAgent — M0 脚手架（端云协同 Android Agent）
 
-这是 [端云协同 Android Agent 收官蓝图](../docs/edge-cloud-agent-capstone.md) 的 **M0 起点工程**：一个能在 Android Studio 打开、接好了 **CMake + JNI + llama.cpp + 流式桥接** 的最小骨架。目标只有一个——**真机离线蹦出第一个 token**。
+这是 [端云协同 Android Agent 收官蓝图](../docs/04-edge-cloud-agent-capstone.md) 的 **M0 起点工程**：一个能在 Android Studio 打开、接好了 **CMake + JNI + llama.cpp + 流式桥接** 的最小骨架。目标只有一个——**真机离线蹦出第一个 token**。
 
 > ⚠️ 诚实说明：这份脚手架是**在文档仓库里生成的代码骨架，未经编译/真机验证**。构建和"第一个 token"需要你在本机 Android Studio + 真机完成。我把 Android 开发最不熟的那部分（native 接线）写好了，但 **llama.cpp 的 C API 会随版本变**，`native-lib.cpp` 可能需要按你 clone 的版本微调（文件头有说明，最权威参照是 llama.cpp 自带的 `examples/llama.android`）。
+
+---
+
+## 中国网络（已配镜像源）
+
+本工程已把两层下载都换成国内镜像，避免 `services.gradle.org` / `dl.google.com` 超时：
+
+- `gradle/wrapper/gradle-wrapper.properties` → **腾讯云**镜像下载 Gradle 发行版
+- `settings.gradle.kts` → **阿里云**镜像优先解析 AGP / Kotlin / Compose / AndroidX 依赖
+
+改完在 Android Studio 点 **File → Sync Project with Gradle Files** 重新同步即可。
+
+> - Gradle 镜像备选（腾讯云不稳时）：`https://mirrors.huaweicloud.com/gradle/gradle-8.9-bin.zip`
+> - 想让**所有**项目都走镜像（一劳永逸）：在 `~/.gradle/init.gradle` 里配全局仓库镜像，而不是每个项目改。
+> - llama.cpp 从 GitHub clone 若慢：用国内加速镜像，或科学上网。
 
 ---
 
@@ -27,16 +42,17 @@ git clone https://github.com/ggml-org/llama.cpp
 ```
 
 ### 2. 准备一个 GGUF 模型
-从 Hugging Face 下一个小模型的 GGUF（建议 1.5B、`Q4_K_M`，对应推理篇 Part 3）：
-例如搜索 `Qwen2.5-1.5B-Instruct-GGUF`，下载 `*q4_k_m.gguf`。
+用 **Qwen2.5-1.5B-Instruct-GGUF**、`Q4_K_M`（约 1.1GB，对应推理篇 Part 3）。国内从 ModelScope（魔搭）下：
+`https://modelscope.cn/models/Qwen/Qwen2.5-1.5B-Instruct-GGUF` → Files 标签 → 下名字带 `q4_k_m` 的 `.gguf`。
 
-> ChatML 模板已按 Qwen2.5 风格写在 `ChatViewModel.formatPrompt()`。**换别的模型要改成它要求的对话模板**，否则可能输出乱码（推理篇 Part 8）。
+> 脚手架的 `ChatViewModel` 用 **ChatML** 模板（Qwen2.5 / Qwen3 通用）。Qwen2.5 无思考模式，直接用；若以后改 Qwen3 想关思考，在 `formatPrompt()` 用户内容后加 ` /no_think`。换别家模型要改模板（推理篇 Part 8）。
 
 ### 3. 把模型推到设备，构建运行
 先在 Android Studio 里 **Open** 本 `pocketagent/` 目录，让它同步（会自动补 Gradle wrapper）。装到真机跑一次（让 App 创建外部目录），然后：
 
 ```bash
 # 把模型推到 App 的外部私有目录（首次运行 App 后该目录才存在）
+# 文件名换成你实际下到的那个 .gguf
 adb push qwen2.5-1.5b-instruct-q4_k_m.gguf \
   /sdcard/Android/data/com.example.pocketagent/files/model.gguf
 ```
@@ -58,6 +74,6 @@ adb push qwen2.5-1.5b-instruct-q4_k_m.gguf \
 
 ## 这之后（对应收官蓝图里程碑）
 
-M0（本脚手架）→ **M1** 端侧 agent loop + 约束解码工具调用（[端侧 Agent/RAG 篇](../docs/on-device-agent-rag.md)）→ **M2** 设备指标 trace（[profiling 篇](../docs/on-device-profiling.md)）→ **M3** 端云路由（[路由篇](../docs/on-device-edge-cloud-routing.md)）→ **M4** 本地 RAG → **M5** 多配置 eval 对比。
+M0（本脚手架）→ **M1** 端侧 agent loop + 约束解码工具调用（[端侧 Agent/RAG 篇](../docs/07-on-device-agent-rag.md)）→ **M2** 设备指标 trace（[profiling 篇](../docs/06-on-device-profiling.md)）→ **M3** 端云路由（[路由篇](../docs/08-on-device-edge-cloud-routing.md)）→ **M4** 本地 RAG → **M5** 多配置 eval 对比。
 
 > 版本说明：Gradle/AGP/Kotlin/Compose 版本为撰写时的稳定组合，用新版 Android Studio 打开若提示升级，按提示升即可。

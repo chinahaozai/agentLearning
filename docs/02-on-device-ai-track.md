@@ -4,7 +4,7 @@
 
 这是主路线图的一条**分叉轨道**，不是替代。
 
-[Android 开发转 Agent 工程学习路线](agent-learning-roadmap.md) 那条主线，把你练成"能做 Agent 应用和 Agent 平台的全栈工程师"——方向对，但它的护城河偏低：你是在跟一大批后端、Python 转型的人抢同一个池子，Android 背景在那条线上只是加分项，不是门槛。
+[Android 开发转 Agent 工程学习路线](01-agent-learning-roadmap.md) 那条主线，把你练成"能做 Agent 应用和 Agent 平台的全栈工程师"——方向对，但它的护城河偏低：你是在跟一大批后端、Python 转型的人抢同一个池子，Android 背景在那条线上只是加分项，不是门槛。
 
 这条轨道补的是**另一半**：让模型**跑在端上（手机 / 芯片）**，做量化、加速、延迟 / 内存 / 功耗优化，以及端云协同的 Agent。这一半恰好吃你已有的 Android 功底，**别人卷不动你**。
 
@@ -37,7 +37,7 @@
 | 模型量化 / 推理原理 | 后端、客户端都缺 | 要补（Part 5.2/5.3）|
 | 内存 / 带宽 / 功耗优化 | **极缺** | **你的主场** |
 | NPU / GPU / 硬件加速 | 极缺 | 半个主场（你懂 GPU、Surface、硬件编解码）|
-| JNI / NDK / C++ 集成 | 缺 | 看个人：NDK 工程好补，**C++ 多数人要补**（见[C++ 补齐计划](cpp-for-on-device-ai.md)）|
+| JNI / NDK / C++ 集成 | 缺 | 看个人：NDK 工程好补，**C++ 多数人要补**（见[C++ 补齐计划](03-cpp-for-on-device-ai.md)）|
 | 真机 profiling / 卡顿排查 | 缺 | **你天天做** |
 | 在真实 App 里落地 | 缺 | **你天天做** |
 
@@ -68,12 +68,12 @@
 
 把多份 JD 的要求去重，高频出现的是：
 
-- **语言**：C++（内存管理 / 多线程 / 性能分析）、Python。✓ Python 主线在学；**C++ 是最该补的硬门槛**（6 份 JD 里 4 份要，详见配套《[C++ 补齐计划](cpp-for-on-device-ai.md)》）。
+- **语言**：C++（内存管理 / 多线程 / 性能分析）、Python。✓ Python 主线在学；**C++ 是最该补的硬门槛**（6 份 JD 里 4 份要，详见配套《[C++ 补齐计划](03-cpp-for-on-device-ai.md)》）。
 - **推理框架**：TFLite / LiteRT、ONNX Runtime、TensorRT（对应 Part 5.3）。
 - **模型压缩**：量化 / 蒸馏 / 剪枝（对应 Part 5.2）。
 - **硬件**：高通 QNN / SNPE、MTK NeuroPilot、NPU 适配（对应 Part 5.4）。
 - **系统**：熟悉 Android / Linux 系统编程。✓ **你的主场**。
-- **端侧 Agent**：工具调用、任务编排（对应 Part 5.6，接主线 [第2篇](llm-api-and-tool-calling.md)）。
+- **端侧 Agent**：工具调用、任务编排（对应 Part 5.6，接主线 [第2篇](10-llm-api-and-tool-calling.md)）。
 
 > 两个提醒：**①** JD 里的"微调"多指"为端侧适配 / 压缩模型"的工程性微调，不是从零训练——这部分躲不开，但学得会。**②** 这些岗薪资都是高级带（3-5 / 5-10 年），接得住的前提是拿得出"真机落地 + 设备指标"的硬货（正是 Part 6 的 M2–M4）。
 
@@ -97,7 +97,7 @@
 
 ## 3.1 端侧推理本质：一份权重 + 一个 runtime，跑在本机
 
-云端调模型是"POST 一段 JSON 给远程接口"（见 [LLM API 与 Tool Calling](llm-api-and-tool-calling.md) Part 1）。端侧反过来：**模型权重文件下到设备本地，由一个本机的推理引擎（runtime）加载、做前向计算，全程不联网。**
+云端调模型是"POST 一段 JSON 给远程接口"（见 [LLM API 与 Tool Calling](10-llm-api-and-tool-calling.md) Part 1）。端侧反过来：**模型权重文件下到设备本地，由一个本机的推理引擎（runtime）加载、做前向计算，全程不联网。**
 
 ```
 云端：你的 App ──HTTP──▶ 远程 GPU 集群（模型在别人机器上）
@@ -125,7 +125,7 @@
                   └─ 复杂 / 算力重 ──────▶ 云端大模型（远程 API）
 ```
 
-> **记住这条**：端侧岗位真正值钱的设计能力，是"**什么该留在端上、什么该甩给云**"的路由判断。这也是为什么主线学的那套云端 Agent（[第2篇](llm-api-and-tool-calling.md)）你**不能丢**——端云协同里"云"那半，就是它。
+> **记住这条**：端侧岗位真正值钱的设计能力，是"**什么该留在端上、什么该甩给云**"的路由判断。这也是为什么主线学的那套云端 Agent（[第2篇](10-llm-api-and-tool-calling.md)）你**不能丢**——端云协同里"云"那半，就是它。
 
 ## 3.3 量化不是"压缩文件"，是用精度换体积和速度 ★
 
@@ -198,7 +198,7 @@
 
 - 格式：**GGUF**（llama.cpp 系）、LiteRT 的 `.task` / `.tflite`、ONNX、ExecuTorch 的 `.pte`。
 - 量化档怎么选：`Q4_K_M` 通常是体积 / 质量的甜点；质量敏感再上 `Q5`/`Q8`。
-- 怎么**评估**质量损失：拿一组固定输入，比量化前后的输出（接回主线 [Eval](agent-eval-and-metrics.md)）。
+- 怎么**评估**质量损失：拿一组固定输入，比量化前后的输出（接回主线 [Eval](12-agent-eval-and-metrics.md)）。
 - 模型转换 / 量化工具链（用现成脚本即可，不必深挖原理）。
 
 ### 5.3 推理 runtime（硬功夫）
@@ -233,7 +233,7 @@
 
 主线学过的云端 tool calling / RAG，搬到端侧会遇到新问题：
 
-- **小模型的 tool calling 不稳**：参数容易乱填，常要用**结构化输出 / 语法约束（grammar / GBNF）**强制格式。✓ 概念见 [第2篇](llm-api-and-tool-calling.md) Part 4/5，端侧加一层"约束解码"。
+- **小模型的 tool calling 不稳**：参数容易乱填，常要用**结构化输出 / 语法约束（grammar / GBNF）**强制格式。✓ 概念见 [第2篇](10-llm-api-and-tool-calling.md) Part 4/5，端侧加一层"约束解码"。
 - **端侧 RAG**：本地 embedding 模型 + 端上向量库（**sqlite-vec** / **ObjectBox** 向量检索），全程离线检索本地文档 / 笔记 / 聊天记录。
 - 上下文窗口小、KV cache 吃内存——检索回来的内容要更精简。
 
@@ -251,7 +251,7 @@
 
 ## 6. 分阶段路线（边做边转，按里程碑非按周）★★
 
-在职转型，**别按自然周排期**，按"能跑、能演示的增量"排里程碑，做完一个再下一个（仿 [收官项目](agentops-mini-platform-design.md) 的 M0–M5 写法）。每周 5～8 小时，整条轨道约 2～4 个月。
+在职转型，**别按自然周排期**，按"能跑、能演示的增量"排里程碑，做完一个再下一个（仿 [收官项目](14-agentops-mini-platform-design.md) 的 M0–M5 写法）。每周 5～8 小时，整条轨道约 2～4 个月。
 
 ### M0 · 跑通第一个端侧模型（最快正反馈）
 
@@ -275,7 +275,7 @@
 
 - **做什么**：给本地小模型加**一个能用的工具调用**（结构化输出约束）+ 一个**本地 RAG**（端上 embedding + sqlite-vec / ObjectBox 检索本地文档）。
 - **验收**：离线状态下，模型能正确调一次本地工具、能基于检索到的本地内容作答。
-- **对应**：Part 5.6（接 [第2篇](llm-api-and-tool-calling.md) / 主线 RAG）
+- **对应**：Part 5.6（接 [第2篇](10-llm-api-and-tool-calling.md) / 主线 RAG）
 
 ### M4 · 端云协同 + 落地现职（临门一脚）
 
@@ -340,14 +340,14 @@
 
 | 主线产出 | 在端侧轨道里 |
 |---|---|
-| [Python + FastAPI](python-fastapi-essentials.md) | **端云协同的"云"端**：本机模型搞不定时，调你自己的后端 |
-| [LLM API 与 Tool Calling](llm-api-and-tool-calling.md) | **直接复用**：端侧 Agent 的工具调用同一套，加一层结构化约束（Part 5.6）|
-| [Trace 与可观测性](agent-trace-and-observability.md) | **复用 + 扩展**：端上 trace 还要记延迟 / 内存 / 电量 / 后端（Part 5.5）|
-| [Eval 与回归](agent-eval-and-metrics.md) | **复用 + 扩展**：端侧 eval 除了质量，还要测设备指标和量化损失 |
-| [Docker 部署](docker-deploy-agent-service.md) | 部署的是端云协同里的云端服务 |
-| [AgentOps Mini Platform](agentops-mini-platform-design.md) | 端侧版收官项目见 [PocketAgent 端云协同蓝图](edge-cloud-agent-capstone.md)，云半部直接复用它的精简版 |
+| [Python + FastAPI](09-python-fastapi-essentials.md) | **端云协同的"云"端**：本机模型搞不定时，调你自己的后端 |
+| [LLM API 与 Tool Calling](10-llm-api-and-tool-calling.md) | **直接复用**：端侧 Agent 的工具调用同一套，加一层结构化约束（Part 5.6）|
+| [Trace 与可观测性](11-agent-trace-and-observability.md) | **复用 + 扩展**：端上 trace 还要记延迟 / 内存 / 电量 / 后端（Part 5.5）|
+| [Eval 与回归](12-agent-eval-and-metrics.md) | **复用 + 扩展**：端侧 eval 除了质量，还要测设备指标和量化损失 |
+| [Docker 部署](13-docker-deploy-agent-service.md) | 部署的是端云协同里的云端服务 |
+| [AgentOps Mini Platform](14-agentops-mini-platform-design.md) | 端侧版收官项目见 [PocketAgent 端云协同蓝图](04-edge-cloud-agent-capstone.md)，云半部直接复用它的精简版 |
 
-> **端侧收官项目**：见 [PocketAgent · 端云协同 Android Agent 蓝图](edge-cloud-agent-capstone.md)——"端云协同"两段式：一个小而精的云端 Agent 服务（证明后端 / Agent 能力，复用 AgentOps 精简版）+ 一个端侧 / 混合的 Android Agent（你的护城河）。
+> **端侧收官项目**：见 [PocketAgent · 端云协同 Android Agent 蓝图](04-edge-cloud-agent-capstone.md)——"端云协同"两段式：一个小而精的云端 Agent 服务（证明后端 / Agent 能力，复用 AgentOps 精简版）+ 一个端侧 / 混合的 Android Agent（你的护城河）。
 
 ---
 

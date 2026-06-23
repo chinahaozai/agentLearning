@@ -272,12 +272,12 @@ worker 不需要单独的代码入口——它就是 compose 里跑 `rq worker` 
 
 这份蓝图把下面五篇拼成一个项目，动手时回去查具体代码：
 
-1. [Python + FastAPI 阅读理解指南](python-fastapi-essentials.md) —— 后端骨架、Pydantic、项目结构
-2. [LLM API 与 Tool Calling 阅读理解指南](llm-api-and-tool-calling.md) —— agent loop、工具调用
-3. [Agent Trace 与可观测性](agent-trace-and-observability.md) —— Trace/Span、埋点、回放
-4. [Agent Eval：评测与回归](agent-eval-and-metrics.md) —— 评测集、指标、版本对比
-5. [Docker 部署 Agent 服务](docker-deploy-agent-service.md) —— 容器化、worker 队列、一键部署
+1. [Python + FastAPI 阅读理解指南](09-python-fastapi-essentials.md) —— 后端骨架、Pydantic、项目结构
+2. [LLM API 与 Tool Calling 阅读理解指南](10-llm-api-and-tool-calling.md) —— agent loop、工具调用
+3. [Agent Trace 与可观测性](11-agent-trace-and-observability.md) —— Trace/Span、埋点、回放
+4. [Agent Eval：评测与回归](12-agent-eval-and-metrics.md) —— 评测集、指标、版本对比
+5. [Docker 部署 Agent 服务](13-docker-deploy-agent-service.md) —— 容器化、worker 队列、一键部署
 
-以及总纲：[Android 开发转 Agent 工程学习路线](agent-learning-roadmap.md)。
+以及总纲：[Android 开发转 Agent 工程学习路线](01-agent-learning-roadmap.md)。
 
 > **一句话收尾**：前五篇让你“看得懂、讲得清”，这篇让你“拼得起来、跑得起来”。把 M0–M5 走完，你就从“学过 Agent”变成了“做过一个 Agent 平台”。
